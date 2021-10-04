@@ -13,7 +13,7 @@ describe("promocode validation application", () => {
       },
     };
     const redeemInfo = {
-      promocode_name: "WeatherCodeAge",
+      promocode_name: "WeatherCodeAgeSimple",
       arguments: {
         age: 15,
       },
