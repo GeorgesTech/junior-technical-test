@@ -48,7 +48,7 @@ describe("promocode validation application", () => {
         ],
         "@date": {
           after: "2021-01-01",
-          before: "2022-01-01",
+          before: "2022-12-31",
         },
         "@meteo": {
           is: "clear",
