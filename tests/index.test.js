@@ -1,107 +1,105 @@
-const askReduction = require("../src/index");
+import { describe, expect, it } from "vitest";
+import { askReduction } from "../src/index";
 
 describe("promocode validation application", () => {
-  it("should return acceptance of a simple promo code", async () => {
-    const promoCode = {
-      name: "WeatherCodeAgeSimple",
-      avantage: { percent: 25 },
-      restrictions: {
-        "@age": {
-          gt: 10,
-          lt: 20,
+  describe("A promocode is valid when all the restrictions are valid. Then return the advantage", () => {
+    it("The promocode is valid as age is between gt and lt", async () => {
+      const promocode = {
+        name: "AgeCode",
+        advantage: { percent: 25 },
+        restrictions: {
+          age: {
+            gt: 10,
+            lt: 20,
+          },
         },
-      },
-    };
-    const redeemInfo = {
-      promocode_name: "WeatherCodeAgeSimple",
-      arguments: {
+      };
+  
+      const information = {
         age: 15,
-      },
-    };
-
-    const received = await askReduction(redeemInfo, promoCode);
-
-    expect(received).toEqual({
-      avantage: { percent: 25 },
-      promocode_name: "WeatherCodeAgeSimple",
-      status: "accepted",
+      };
+  
+      const result = await askReduction(information, promocode);
+  
+      expect(result).toEqual({
+        advantage: { percent: 25 },
+        promocode_name: "AgeCode",
+        status: "accepted",
+      });
     });
-  });
-
-  it("should return acceptance of a complex valid promo code", async () => {
-    const promoCode = {
-      name: "WeatherCodeAgeComplex",
-      avantage: { percent: 20 },
-      restrictions: {
-        "@or": [
-          {
-            "@age": {
-              eq: 40,
+  
+    it("The promocode is valid as date is between after and before, and weather is like is with a temperature less than lt, and age is not equal to eq but between lt and gt", async () => {
+      const promocode = {
+        name: "ComplexCode",
+        advantage: { percent: 20 },
+        restrictions: {
+          or: [
+            {
+              age: {
+                eq: 40,
+              },
+            },
+            {
+              age: {
+                lt: 30,
+                gt: 15,
+              },
+            },
+          ],
+          date: {
+            after: "2021-01-01",
+            before: "2022-01-01",
+          },
+          weather: {
+            is: "clear",
+            temp: {
+              lt: 15, // Celsius here.
             },
           },
-          {
-            "@age": {
-              lt: 30,
-              gt: 15,
-            },
-          },
-        ],
-        "@date": {
-          after: "2021-01-01",
-          before: "2022-12-31",
         },
-        "@meteo": {
-          is: "clear",
-          temp: {
-            lt: "100", // Celsius here.
-          },
-        },
-      },
-    };
+      };
 
-    const redeemInfo = {
-      promocode_name: "WeatherCodeAgeComplex",
-      arguments: {
+      const information = {
         age: 16,
-        meteo: { town: "Lyon" },
-      },
-    };
+        town: "Lyon",
+      };
 
-    const received = await askReduction(redeemInfo, promoCode);
+      const result = await askReduction(information, promocode);
 
-    expect(received).toEqual({
-      avantage: { percent: 20 },
-      promocode_name: "WeatherCodeAgeComplex",
-      status: "accepted",
+      expect(result).toEqual({
+        advantage: { percent: 20 },
+        promocode_name: "ComplexCode",
+        status: "accepted",
+      });
     });
   });
 
-  it("should reject an invalid promo code", async () => {
-    const promoCode = {
-      name: "WeatherCodeInvalid",
-      avantage: { percent: 20 },
-      restrictions: {
-        "@age": {
-          gt: 10,
-          lt: 20,
+  describe("A promocode is invalid when at least one restriction is not valid. Then return the reasons for the invalidity", () => {
+    it("The promocode is invalid as age is not between gt and lt", async () => {
+      const promocode = {
+        name: "AgeCode",
+        advantage: { percent: 20 },
+        restrictions: {
+          age: {
+            gt: 10,
+            lt: 20,
+          },
         },
-      },
-    };
-    const redeemInfo = {
-      promocode_name: "WeatherCodeInvalid",
-      arguments: {
+      };
+
+      const information = {
         age: 55,
-      },
-    };
+      };
 
-    const received = await askReduction(redeemInfo, promoCode);
+      const result = await askReduction(information, promocode);
 
-    expect(received).toEqual({
-      promocode_name: "WeatherCodeInvalid",
-      reasons: {
-        age: "isNotLt",
-      },
-      status: "denied",
+      expect(result).toEqual({
+        promocode_name: "AgeCode",
+        reasons: [
+          // TODO à compléter
+        ],
+        status: "denied",
+      });
     });
   });
 });

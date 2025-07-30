@@ -1,3 +1,3 @@
-module.exports = askReduction;
+export async function askReduction(information, promocode) {
 
-async function askReduction(askReductionInput, promoCode) {}
+}
