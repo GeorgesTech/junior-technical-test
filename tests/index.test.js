@@ -7,12 +7,14 @@ describe("promocode validation application", () => {
       const promocode = {
         name: "AgeCode",
         advantage: { percent: 25 },
-        restrictions: {
-          age: {
-            gt: 10,
-            lt: 20,
+        restrictions: [
+          {
+            age: {
+              gt: 10,
+              lt: 20,
+            },
           },
-        },
+        ],
       };
   
       const information = {
@@ -32,31 +34,37 @@ describe("promocode validation application", () => {
       const promocode = {
         name: "ComplexCode",
         advantage: { percent: 20 },
-        restrictions: {
-          or: [
-            {
-              age: {
-                eq: 40,
+        restrictions: [
+          {
+            or: [
+              {
+                age: {
+                  eq: 40,
+                },
               },
-            },
-            {
-              age: {
-                lt: 30,
-                gt: 15,
+              {
+                age: {
+                  lt: 30,
+                  gt: 15,
+                },
               },
-            },
-          ],
-          date: {
-            after: "2021-01-01",
-            before: "2022-01-01",
+            ],
           },
-          weather: {
-            is: "clear",
-            temp: {
-              lt: 15, // Celsius here.
+          {
+            date: {
+              after: "2021-01-01",
+              before: "2022-01-01",
             },
           },
-        },
+          {
+            weather: {
+              is: "clear",
+              temp: {
+                lt: 15,
+              },
+            },
+          },
+        ],
       };
 
       const information = {
@@ -79,12 +87,14 @@ describe("promocode validation application", () => {
       const promocode = {
         name: "AgeCode",
         advantage: { percent: 20 },
-        restrictions: {
-          age: {
-            gt: 10,
-            lt: 20,
+        restrictions: [
+          {
+            age: {
+              gt: 10,
+              lt: 20,
+            },
           },
-        },
+        ],
       };
 
       const information = {
